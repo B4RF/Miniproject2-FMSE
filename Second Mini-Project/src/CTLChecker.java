@@ -42,7 +42,7 @@ public class CTLChecker {
 		
 		String str = f.getString().trim();
 
-		if (str.startsWith("not")) {
+		if (str.startsWith("not ") || str.startsWith("not(")) {
 			str = str.substring(3);
 			f.setFormula(str);
 
@@ -71,19 +71,31 @@ public class CTLChecker {
 				f.setFormula(str.substring(1, str.length()-2));
 				satisfiedStates = checkFormulaRek(f);
 			}
-		} else if (str.startsWith("ex")) {
+		} else if (str.startsWith("ex ") || str.startsWith("ex(")) {
 			str = str.substring(2);
 			f.setFormula(str);
 
 			satisfiedStates = checkEX(f);
 
-		} else if (str.startsWith("eg")) {
+		} else if (str.startsWith("ax ") || str.startsWith("ax(")) {
+			str = "NOT EX NOT " + str.substring(2);
+			f.setFormula(str);
+
+			satisfiedStates = checkFormulaRek(f);
+
+		} else if (str.startsWith("eg ") || str.startsWith("eg(")) {
 			str = str.substring(2);
 			f.setFormula(str);
 
 			satisfiedStates = checkEG(f);
 			
-		} else if (str.startsWith("ef")) {
+		} else if (str.startsWith("ag ") || str.startsWith("ag(")) {
+			str = "NOT EF NOT " + str.substring(2);
+			f.setFormula(str);
+
+			satisfiedStates = checkFormulaRek(f);
+			
+		} else if (str.startsWith("ef ") || str.startsWith("ef(")) {
 			CTLFormula f1 = f;
 			CTLFormula f2 = new CTLFormula(str);
 			f2.setStates(f.getStates());
@@ -92,6 +104,12 @@ public class CTLChecker {
 			f2.setFormula(str.substring(2));
 
 			satisfiedStates = checkEU(f1, f2);
+
+		} else if (str.startsWith("af ") || str.startsWith("af(")) {
+			str = "NOT EG NOT " + str.substring(2);
+			f.setFormula(str);
+
+			satisfiedStates = checkFormulaRek(f);
 
 		} else if (str.startsWith("e[")) {
 			CTLFormula f1 = f;
@@ -105,10 +123,10 @@ public class CTLChecker {
 
 			satisfiedStates = checkEU(f1, f2);
 
-		} else if (str.startsWith("true")) {
+		} else if (str.startsWith("true ") || str.startsWith("true(")) {
 			satisfiedStates = states;
 
-		} else if (str.startsWith("false")) {
+		} else if (str.startsWith("false ") || str.startsWith("false(")) {
 			satisfiedStates.clear();
 
 		} else {
