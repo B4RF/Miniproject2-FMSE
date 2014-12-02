@@ -27,12 +27,14 @@ public class Gui extends JFrame {
 	JPanel panel = new JPanel();
 	JPanel lts1panel = new JPanel();
 	JPanel lts2panel = new JPanel();
+	JPanel cpcpanel = new JPanel();
 	JPanel checkpanel = new JPanel();
 	JButton loadLts1 = new JButton("load LTS1");
 	JButton loadLts2 = new JButton("load LTS2");
 	JButton showLts1 = new JButton("show graph LTS1");
 	JButton showLts2 = new JButton("show graph LTS2");
-	JButton cpc = new JButton("create parallel composition");
+	JButton createCpc = new JButton("create parallel composition");
+	JButton saveCpc = new JButton("save parallel composition");
 	JButton check = new JButton("check CTL");
 	JTextField text = new JTextField();
 
@@ -54,6 +56,7 @@ public class Gui extends JFrame {
 	    panel.setLayout(new GridLayout(6,0));
 	    lts1panel.setLayout(new GridLayout(0,2));
 	    lts2panel.setLayout(new GridLayout(0,2));
+	    cpcpanel.setLayout(new GridLayout(0,2));
 	    checkpanel.setLayout(new GridLayout(0,6));
 	    
 	    panel.add(lts1panel);
@@ -64,7 +67,9 @@ public class Gui extends JFrame {
 	    lts2panel.add(loadLts2);
 	    lts2panel.add(showLts2);
 
-	    panel.add(cpc);
+	    panel.add(cpcpanel);
+	    cpcpanel.add(createCpc);
+	    cpcpanel.add(saveCpc);
 	    
 	    Font font = new Font(null, Font.BOLD, 14);
         text.setFont(font);
@@ -150,7 +155,7 @@ public class Gui extends JFrame {
 			}
 	    });
 	    
-	    cpc.addActionListener(new ActionListener(){
+	    createCpc.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -168,6 +173,20 @@ public class Gui extends JFrame {
 					
 					openPng();
 				}
+			}
+	    });
+	    
+	    saveCpc.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+		        int approve = chooser.showSaveDialog(null);
+
+		        if(approve == JFileChooser.APPROVE_OPTION)
+		        {
+		        	LTS.write(chooser.getSelectedFile().getPath(), parallelComposition);
+		        }
 			}
 	    });
 	    

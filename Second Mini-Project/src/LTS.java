@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -187,7 +188,7 @@ public class LTS {
 			Set<AP> apsA = a.getAPs();
 			for (State b : bSet) {
 				Set<AP> apsB = b.getAPs();
-				State s = new State(a.getName() + ", " + b.getName());
+				State s = new State(a.getName() + "/" + b.getName()); // Komma entfernt
 				Set<AP> aps = new HashSet<AP>();
 				aps.addAll(apsA);
 				for (AP ap : apsB) {
@@ -257,6 +258,65 @@ public class LTS {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+	
+	public static void write(String file, LTS lts){
+		FileWriter writer = null;
+
+		try {
+			writer = new FileWriter(file, true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			writer.write(System.getProperty("line.separator"));
+			
+			for (State s : lts.getInitialStates()) {
+				String nextLine;
+
+				nextLine = "I,"+ s.getName();
+				
+				for(AP ap : s.getAPs()) {
+					nextLine += "," + ap.getLabel();
+				}
+				
+				writer.write(nextLine);
+				writer.write(System.getProperty("line.separator"));
+			}
+			
+			Set<State> nonInitials = lts.getStates();
+			for (State s : lts.getInitialStates()) {
+				nonInitials.remove(s);
+			}
+
+			for (State s : nonInitials) {
+				String nextLine;
+
+				nextLine = "S," + s.getName();
+				
+				for(AP ap : s.getAPs()) {
+					nextLine += "," + ap.getLabel();
+				}
+
+				writer.write(nextLine);
+				writer.write(System.getProperty("line.separator"));
+			}
+			
+			for (Transition t : lts.getTransitions()) {
+				String nextLine = "T," + t.getBegin().getName() + "," + t.getEnd().getName() + "," + t.getAction().getAction();
+
+				writer.write(nextLine);
+				writer.write(System.getProperty("line.separator"));
+			}
+			
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static LTS parallelComposition(List<LTS> list) {
