@@ -10,12 +10,12 @@ Wie können Eingaben gemacht werden?
 In einer CSV-Datei, welche als LTS über die Buttons 'load LTS1/LTS2' geladen werden kann.
 Das Format ist hierbei wie folgt:
 
-Für einen Startzustand:
-I,[name][,AP1 ... ,APn]
-Für einen anderen Zustand:
-S,[name][,AP1 ... ,APn]
-Für eine Transition:
-T,[from],[to],[name]
+Für einen Startzustand:  
+I,[name][,AP1 ... ,APn]  
+Für einen anderen Zustand:  
+S,[name][,AP1 ... ,APn]  
+Für eine Transition:  
+T,[from],[to],[name]  
 
 Hierbei müssen zunächst Zustände und anschließend Transitions definiert werden. Wichtig ist außerdem, dass für den composition operator Zustände nicht den selben Namen haben dürfen! (auch nicht, wenn sie aus einem anderen LTS stammen)
 Außerdem sind die atomaren propositionen für einen Zustand optional.
@@ -31,18 +31,18 @@ Sobald wenigstens ein LTS geladen wurde kann dieses gegen eine CTL-Formel geprüf
 Sollte ein LTS die Formel erfüllen, erscheint am unteren Rand der GUI ein grüner Punkt hinter dem entsprechenden LTS (LTS1, LTS2, LTS1||LTS2). Sollte das LTS die Formel nicht erfüllen, erscheint ein roter Punkt.
 Mögliche Eingaben für eine Formel sind hierbei wie folgt:
 
-EX ...
-EG ...
-EF ...
-E[ ... U ...]
-AX
-AG
-AF
-(... AND ...)
-(... OR ...)
-NOT
-TRUE
-FALSE
+EX ...  
+EG ...  
+EF ...  
+E[ ... U ...]  
+AX  
+AG  
+AF  
+(... AND ...)  
+(... OR ...)  
+NOT  
+TRUE  
+FALSE  
 
 Hierbei müssen für AND und OR Klammern gesetzt werden. Zudem können beliebig weitere Klammern gesetzt werden, um die Lesbarkeit für den Nutzer zu verbessern (nur runde Klammern).
 Eingaben können beliebig groß oder klein geschrieben werden.
