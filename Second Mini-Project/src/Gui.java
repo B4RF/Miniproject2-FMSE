@@ -180,13 +180,18 @@ public class Gui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-		        int approve = chooser.showSaveDialog(null);
+				
+				if(parallelComposition == null){
+					JOptionPane.showMessageDialog(null,"You need to create a parallel composition to proceed!", "Error",JOptionPane.ERROR_MESSAGE);
+				}else{
+					JFileChooser chooser = new JFileChooser();
+			        int approve = chooser.showSaveDialog(null);
 
-		        if(approve == JFileChooser.APPROVE_OPTION)
-		        {
-		        	LTS.write(chooser.getSelectedFile().getPath(), parallelComposition);
-		        }
+			        if(approve == JFileChooser.APPROVE_OPTION)
+			        {
+			        	LTS.write(chooser.getSelectedFile().getPath(), parallelComposition);
+			        }
+				}
 			}
 	    });
 	    
