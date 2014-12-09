@@ -350,6 +350,8 @@ public class CTLChecker {
 				}
 			}
 		}
+		
+		satisfiedStates.addAll(formulaStates2);
 
 		return satisfiedStates;
 	}
