@@ -39,7 +39,7 @@ public class CTLChecker {
 	private Set<State> checkFormulaRek(CTLFormula f) {
 
 		Set<State> satisfiedStates = new HashSet<State>();
-		
+
 		String str = f.getString().trim();
 
 		if (str.startsWith("not ") || str.startsWith("not(")) {
@@ -67,8 +67,8 @@ public class CTLChecker {
 				f2.setFormula(str.substring(or + 4, str.length() - 1));
 
 				satisfiedStates = checkOR(f1, f2);
-			}else{
-				f.setFormula(str.substring(1, str.length()-2));
+			} else {
+				f.setFormula(str.substring(1, str.length() - 2));
 				satisfiedStates = checkFormulaRek(f);
 			}
 		} else if (str.startsWith("ex ") || str.startsWith("ex(")) {
@@ -88,13 +88,13 @@ public class CTLChecker {
 			f.setFormula(str);
 
 			satisfiedStates = checkEG(f);
-			
+
 		} else if (str.startsWith("ag ") || str.startsWith("ag(")) {
 			str = "NOT EF NOT " + str.substring(2);
 			f.setFormula(str);
 
 			satisfiedStates = checkFormulaRek(f);
-			
+
 		} else if (str.startsWith("ef ") || str.startsWith("ef(")) {
 			CTLFormula f1 = f;
 			CTLFormula f2 = new CTLFormula(str);
@@ -115,9 +115,9 @@ public class CTLChecker {
 			CTLFormula f1 = f;
 			CTLFormula f2 = new CTLFormula(str);
 			f2.setStates(f.getStates());
-			
+
 			int nextU = nextUnexcludedU(str);
-			
+
 			f1.setFormula(str.substring(2, nextU));
 			f2.setFormula(str.substring(nextU + 3, str.length() - 1));
 
@@ -133,8 +133,8 @@ public class CTLChecker {
 			for (State s : states) {
 				for (AP ap : s.getAPs()) {
 					String label = ap.getLabel().toLowerCase();
-					
-					if(label.equals(str)){
+
+					if (label.equals(str)) {
 						satisfiedStates.add(s);
 					}
 				}
@@ -157,7 +157,8 @@ public class CTLChecker {
 				brackets++;
 			} else if (c == ')') {
 				brackets--;
-			} else if (brackets == 0 && str.substring(charIndex, charIndex + 5).equals(" and ")) {
+			} else if (brackets == 0
+					&& str.substring(charIndex, charIndex + 5).equals(" and ")) {
 				return charIndex;
 			}
 		}
@@ -178,7 +179,8 @@ public class CTLChecker {
 				brackets++;
 			} else if (c == ')') {
 				brackets--;
-			} else if (brackets == 0 && str.substring(charIndex, charIndex + 4).equals(" or ")) {
+			} else if (brackets == 0
+					&& str.substring(charIndex, charIndex + 4).equals(" or ")) {
 				return charIndex;
 			}
 		}
@@ -196,7 +198,8 @@ public class CTLChecker {
 				brackets++;
 			} else if (c == ']') {
 				brackets--;
-			} else if (brackets == 0 && str.substring(charIndex, charIndex + 3).equals(" u ")) {
+			} else if (brackets == 0
+					&& str.substring(charIndex, charIndex + 3).equals(" u ")) {
 				return charIndex;
 			}
 		}
@@ -250,10 +253,10 @@ public class CTLChecker {
 		/*
 		 * EX φ (next)
 		 * 
-		 * 1. find all states that satisfy φ 2. mark all predecessors to satisfy
-		 * EX φ
+		 * 1. find all states that satisfy φ 2. mark all predecessors to
+		 * satisfy EX φ
 		 */
-		
+
 		Set<State> formulaStates = checkFormulaRek(f);
 
 		Set<State> satisfiedStates = new HashSet<State>();
@@ -272,10 +275,10 @@ public class CTLChecker {
 		/*
 		 * EG φ (always)
 		 * 
-		 * 1. Be S' ⊆ S all states in which φ holds 2. calculate all maximally
-		 * strongly connected components (SCC) of S' that have at least one
-		 * transition 3. Mark all states in S' from which such an SCC is
-		 * reachable to satisfy EG φ
+		 * 1. Be S' ⊆ S all states in which φ holds 2. calculate all
+		 * maximally strongly connected components (SCC) of S' that have at
+		 * least one transition 3. Mark all states in S' from which such an SCC
+		 * is reachable to satisfy EG φ
 		 */
 
 		Set<State> formulaStates = checkFormulaRek(f);
@@ -321,37 +324,24 @@ public class CTLChecker {
 
 		Set<State> satisfiedStates = new HashSet<State>();
 
-		for (Transition t : transitions) {
-			State s = t.getBegin();
+		Queue<State> queue = new LinkedList<State>();
+		queue.addAll(formulaStates2);
 
-			if (!satisfiedStates.contains(s)
-					&& formulaStates2.contains(t.getEnd())
-					&& formulaStates1.contains(s)) {
+		while (!queue.isEmpty()) {
+			State currentState = queue.remove();
+			satisfiedStates.add(currentState);
 
-				satisfiedStates.add(s);
+			for (Transition tra : transitions) {
+				State nextState = tra.getBegin();
 
-				Queue<State> queue = new LinkedList<State>();
-				queue.add(s);
+				if (currentState.equals(tra.getEnd())
+						&& !satisfiedStates.contains(nextState)
+						&& formulaStates1.contains(nextState)) {
 
-				while (!queue.isEmpty()) {
-					State currentState = queue.remove();
-
-					for (Transition tra : transitions) {
-						State nextState = tra.getBegin();
-
-						if (currentState.equals(tra.getEnd())
-								&& !satisfiedStates.contains(nextState)
-								&& formulaStates2.contains(nextState)) {
-
-							queue.add(nextState);
-							satisfiedStates.add(nextState);
-						}
-					}
+					queue.add(nextState);
 				}
 			}
 		}
-		
-		satisfiedStates.addAll(formulaStates2);
 
 		return satisfiedStates;
 	}
