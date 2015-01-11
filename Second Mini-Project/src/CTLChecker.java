@@ -123,10 +123,10 @@ public class CTLChecker {
 
 			satisfiedStates = checkEU(f1, f2);
 
-		} else if (str.startsWith("true")) {
+		} else if (str.equals("true")) {
 			satisfiedStates = states;
 
-		} else if (str.startsWith("false")) {
+		} else if (str.equals("false")) {
 			satisfiedStates.clear();
 
 		} else {
